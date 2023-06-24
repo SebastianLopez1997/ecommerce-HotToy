@@ -108,29 +108,41 @@ function actualizarBotonesAgregar () {
     
 }
 
-const productosEnCarrito = [] ;
+let productosEnCarritos;
+
+let productosEnCarritoLS = localStorage.getItem("productos-en-carrito");
+
+
+
+if(productosEnCarritoLS){
+    productosEnCarritos = JSON.parse(productosEnCarritoLS);
+    actualizarNumerito();
+}else{
+    productosEnCarritos = [];
+}
+
 
 function agregarAlCarrito (e) {
     
     const idBoton = e.currentTarget.id;
     const productoAgregado = productos.find(producto => producto.id === idBoton);
     
-    if(productosEnCarrito.some(producto => producto.id === idBoton)){
-       const index = productosEnCarrito.findIndex(producto => producto.id === idBoton);
-       productosEnCarrito[index].cantidad++;
+    if(productosEnCarritos.some(producto => producto.id === idBoton)){
+       const index = productosEnCarritos.findIndex(producto => producto.id === idBoton);
+       productosEnCarritos[index].cantidad++;
     }else {
     
         productoAgregado.cantidad = 1;
-        productosEnCarrito.push(productoAgregado);
+        productosEnCarritos.push(productoAgregado);
     }
     
     actualizarNumerito ();
     
-    localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
+    localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarritos));
 }
 
 function actualizarNumerito () {
-    let nuevoNumerito = productosEnCarrito.reduce((acc, producto) => acc + producto.cantidad, 0 );
+    let nuevoNumerito = productosEnCarritos.reduce((acc, producto) => acc + producto.cantidad, 0 );
     
     numerito.innerText = nuevoNumerito;
 }
